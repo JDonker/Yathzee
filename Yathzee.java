@@ -80,6 +80,8 @@ public class Yathzee {
 	
     
     private void werpen(Worp hand) {
+    	
+    	// voer worpen uit en geef mogelijkheid tot vasthouden steen
 		hand.Werpen();
 		String input;
 		while (hand.isActief()) {
@@ -89,13 +91,15 @@ public class Yathzee {
 			input = reader.nextLine();
 			switch(input) {
 				case "q":
-				this.spelActief = false;
+					System.out.print("Gestopt en ");
+					this.spelActief = false;
 				case "p":
+					System.out.println("gepast!");
 					hand.pas();
 					break;
+				default: 
+					hand.Werpen(input);
 			}
-			hand.Werpen(input);
-
 		}
 		System.out.println("[1][2][3][4][5]");
 		System.out.println(hand.getString());
@@ -107,27 +111,31 @@ public class Yathzee {
     	boolean keuzeGemaakt = false;
 		Map<String, Integer> worpKaart = hand.getWorpScoreKaart();
 		Map<String, Integer> spelerKaart = speler.getScoreKaart();
-		System.out.println("vakje\t\tScorekaart \t\tWorpscore");
+		System.out.println("vakje\t\t\tScorekaart \tWorpscore");
 		char index = 'a';
 		for(String code : Speler.codes) {
-			if(spelerKaart.get(code)>0) {
-				System.out.println("["+ index + "]" + code + "\t  " + spelerKaart.get(code) +"\t\t  " + worpKaart.get(code) );
+			if(spelerKaart.get(code)>-1) {
+				System.out.println("["+ index + "]" + code + "\t  " + spelerKaart.get(code) +"\t\t  n.v.t.");
 			} else {
 				System.out.println("["+ index + "]" + code + "\t  [leeg] \t  " + worpKaart.get(code) );
 			}
 			index++;
 		}
-		System.out.println("Geef aan in welke vakje je de score wil opslaan;");
+		
 		
 		keuzeGemaakt = true;
 		while(keuzeGemaakt) {
+			System.out.println("Geef aan in welke vakje je de score wil opslaan;");
 			input = reader.nextLine();
 			if(input.length()==1) {
 				input = input.toLowerCase();
 				char keuze = input.charAt(0);
+				// check of de char in de goede range zit
 				if(keuze>96&& keuze<110) {
-					speler.setScore(Speler.codes[keuze-97], worpKaart.get(Speler.codes[keuze-97]));
-					keuzeGemaakt=false;
+					if (spelerKaart.get(Speler.codes[keuze-97])<0) {
+						speler.setScore(Speler.codes[keuze-97], worpKaart.get(Speler.codes[keuze-97]));
+						keuzeGemaakt=false;
+					}
 				}
 				
 			} else {
