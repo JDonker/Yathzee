@@ -6,6 +6,7 @@ public class Yathzee {
 	private ArrayList<Speler> spelers;
 	private Scanner reader;
 	private boolean spelActief;
+	private boolean rondeActief;
 	
 	
 	public Yathzee() {
@@ -18,15 +19,14 @@ public class Yathzee {
 	}
 	
 	public void run() {
-		boolean spelActief = true;
-		boolean rondeActief;
+		this.spelActief = true;
 		Worp hand;
 		while(spelActief) {
 			
 			for(Speler speler: this.spelers) {
 				speler.nieuweScoreKaart();
 			}
-			rondeActief = true;
+			this.rondeActief = true;
 			while(rondeActief) {
 				for(Speler speler: this.spelers) {
 					if (!speler.kaartVol()) {
@@ -37,12 +37,13 @@ public class Yathzee {
 						scoren(hand,speler);
 					}
 				}
-				
-				// check of kaarten vol zijn
-				rondeActief = false;
-				for(Speler speler: this.spelers) {
-					if (!speler.kaartVol()) {
-						rondeActief = true;
+				if (this.rondeActief) {
+					// check of kaarten vol zijn
+					rondeActief = false;
+					for(Speler speler: this.spelers) {
+						if (!speler.kaartVol()) {
+							rondeActief = true;
+						}
 					}
 				}
 				
@@ -57,6 +58,8 @@ public class Yathzee {
 			
 			
 		}
+		
+		System.out.println("Doei!");
 	}
 	
     private void leesSpelers(){
@@ -93,6 +96,7 @@ public class Yathzee {
 				case "q":
 					System.out.print("Gestopt en ");
 					this.spelActief = false;
+					this.rondeActief=false;
 				case "p":
 					System.out.println("gepast!");
 					hand.pas();
